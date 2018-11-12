@@ -1,0 +1,36 @@
+{% extends "admin/base_site.html" %}
+{% load admin_static admin_modify i18n %}
+
+{% block extrahead %}{{ block.super }}
+{{ media }}
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" hr
+ef="{% static 'admin/css/forms.css' %}" />{% endblock %}
+
+{% block content %}
+<h1>Rotate images</h1>
+
+<p>Images are rotated 90 degrees clockwise.</p>
+
+<p>Note: rotation, though successful, may not appear to have worked
+without refreshing the page.</p>
+
+<p>Click the reload arrow next to the URL bar to refresh the site.
+Pressing the shift key and reloading may work better on some
+browsers.</p>
+
+<form action="" method="post">
+{% csrf_token %}
+<div>
+<table>
+  {{ form }}
+  <tr>
+    <td></td>
+    <td><input type="submit" value="Rotate"></td>
+  </tr>
+</table>
+</form>
+
+</div>
+{% endblock content %}

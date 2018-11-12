@@ -1,0 +1,28 @@
+{% extends "sculpture/display/image.html" %}
+
+
+{% block article_content %}
+{{ block.super }}
+
+<section>
+  <div>
+    <img src="{{ image.image.url }}">
+    {% if image.photographer %}
+    <p>by {{ image.photographer }}</p>
+    {% endif %}
+  </div>
+
+    {% if image.copyright %}
+
+    <p><strong>Copyright:</strong> {{image.copyright}}</p>
+    {% endif %}
+
+
+  <p>Image of <a href="{% url 'site_display' site.id %}">{{ site.name }}</a>.</p>
+
+  {% if image.description %}
+  <p>{{ image.description }}</p>
+  {% endif %}
+
+</section>
+{% endblock article_content %}

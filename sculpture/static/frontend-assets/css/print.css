@@ -1,0 +1,28 @@
+/**
+ * CRSBI Stylesheet.
+ *
+ * Questions? Brian.maher@kcl.ac.uk
+ */
+
+ @page {
+    margin: 3cm 2cm; padding-left: 1.5cm;
+    background: green;
+    @top-center {
+        content: "Introduction to CSS 2.1";
+        vertical-align: bottom;
+        border-bottom: 0.5pt solid }
+    @bottom-right {
+        content: "Page " counter(page)
+                 " of " counter(pages) }
+    @left-top {
+        content: "W3C Recommendation";
+        background: #005a9c;
+        color: #fff;
+        text-align: right;
+        transform-origin: 100% 0;
+        transform: rotate(-90deg) 
+        }
+    }
+body { text-align: justify }
+h1 { -weasy-bookmark-level: none }
+

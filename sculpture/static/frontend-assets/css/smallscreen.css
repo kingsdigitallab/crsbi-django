@@ -1,0 +1,80 @@
+/**
+ * CRSBI Stylesheet for smaller screens.
+ * Handles responsiveness not taken care of by
+ * Foundation.
+ *
+ * Questions? Brian.maher@kcl.ac.uk
+ */
+
+
+@media screen and (max-width: 1130px){
+	.site-header .site-title
+	{
+		margin-top: 0px;
+	}	
+
+}
+
+@media screen and (max-width: 768px){
+	.site-header .site-title, .switcher
+	{
+		margin-top: -16px;
+	}	
+	
+	.site-nav
+	{
+		display: none;
+	}
+	
+	.site-footer-logo
+	{
+		display: none;
+	}
+
+	.footer-links
+	{
+		margin-top: -40px;
+	}
+	.browse-icon
+	{
+		display: none !important;
+	}
+	
+}
+
+@media screen and (max-width: 550px){	
+
+	nav ul li
+	{
+		font-size: 8pt;
+	}
+	
+	.site-header .switcher
+	{
+		display: none;
+	}
+
+}
+
+@media screen and (max-width: 420px){
+	.site-header .site-title .text strong
+	{
+		font-size: 2em;
+	}
+
+
+}
+
+@media screen and (max-width: 380px){
+	
+	.site-header .site-title
+	{
+		padding-left:20px;
+	}
+	.site-header .site-title img
+	{
+		display: none;
+	}
+	
+
+}

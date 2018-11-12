@@ -1,0 +1,19 @@
+{% extends "sculpture/display/base.html" %}
+
+
+{%block title%}Diocese: {{diocese}}{%endblock%}
+
+{%block breadcrumb%}
+<li><a href="{{diocese.get_absolute_url}}">Diocese: {{diocese}}</a>
+{% endblock %}
+
+
+{% block article_content %}
+<div class="large-12 columns">
+<header>  <h1>{{ diocese }}</header>
+
+<p>Sites in this diocese: <a href="{% url 'haystack_site_search' %}?selected_facets=dioceses_medieval_exact:{{ diocese }}">medieval</a> and <a href="{% url 'haystack_site_search' %}?selected_facets=dioceses_now_exact:{{ diocese }}">now</a>.</p>
+
+<p>Images in this diocese: <a href="{% url 'haystack_image_search' %}?selected_facets=dioceses_medieval_exact:{{ diocese }}">medieval</a> and <a href="{% url 'haystack_image_search' %}?selected_facets=dioceses_now_exact:{{ diocese }}">now</a>.</p>
+</div>
+{% endblock article_content %}

@@ -1,0 +1,17 @@
+{% if facets %}
+  <div class="facet">
+      <header><h3><a class="facet-title" href="#" data-field="{{facet_field}}"><i class="icon icon-circle-arrow-right"></i> &nbsp; {{ facet_name }}</a></h3></header>
+	  <div data-field="{{ facet_field }}" class="facet-options">
+
+	  	{% if help_text %}
+	  	  <p class="meta">{{ help_text }}</p>
+	  	{% endif %}
+		  <ul>
+		  {% for facet in facets %}
+			  {% include "search/facet.html" with facet=facet facet_field=facet_field %}
+		  {% endfor %}
+	      </ul>
+		  <input type="text" class="facet-search" data-field="{{facet_field}}" placeholder="Search...">
+	  </div>
+  </div>
+{% endif %}

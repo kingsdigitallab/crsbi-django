@@ -1,0 +1,38 @@
+{% extends "sculpture/display/base.html" %}
+
+
+{% block title %}
+Glossary
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="/glossary">Glossary</a>
+	{% endblock %}
+	
+{% block article_content %}
+<div class="large-12 columns">
+<header><h1>Glossary</h1></header>
+
+{% regroup object_list by name.0|upper as glossary_terms %}
+<p>{% for initial in glossary_terms %}<a href="#initial{{ initial.grouper }}">{{ initial.grouper }}</a> {% endfor %}
+
+<a href="/pdf{{request.get_full_path}}" class="right">Download as PDF</a>
+
+</p>
+
+{% for initial in glossary_terms %}
+<header><h2 id="initial{{ initial.grouper }}">{{ initial.grouper }}</h2></header>
+<ul class="glossary-list" style="list-style: none;">
+  {% for glossary_term in initial.list %}
+  <li>
+	  <span class="large-3 columns glossary-title"><a href="{% url 'glossary_term_display' glossary_term.id %}">{{ glossary_term.name }}
+	  </a></span>
+	  
+	  <span class="large-9 columns">{{ glossary_term.description|safe }}</span>
+  	
+  </li>
+  {% endfor %}
+</ul>
+{% endfor %}
+</div>
+{% endblock article_content %}

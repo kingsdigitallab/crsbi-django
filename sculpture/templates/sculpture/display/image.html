@@ -1,0 +1,17 @@
+{% extends "sculpture/display/base.html" %}
+
+{% block title %}
+{{ image.caption }}
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{{image.site.get_absolute_url}}">{{image.site}}</a>
+<li><a href="{{image.get_absolute_url}}">{{image}}</a>
+	
+{% endblock %}
+{% block article_content %}
+<div class="large-12 columns">
+
+<header><h1>{{ image.caption }}</h1></header>
+</div>
+{% endblock article_content %}

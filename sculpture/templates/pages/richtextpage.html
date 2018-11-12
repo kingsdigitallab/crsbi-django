@@ -1,0 +1,51 @@
+{% extends "sculpture/base.html" %}
+
+{% load mezzanine_tags %}
+{% load pages_tags %}
+{% load filters %}
+
+{% block title %}
+{{page.title}}
+{% endblock %}
+
+{% block breadcrumb %}
+{% if page.parent %}
+<li><a href="{{page.parent.get_absolute_url}}">{{page.parent.title}}</a>
+{% endif %}
+<li><a href="{{page.get_absolute_url}}">{{page.title}}</a>
+
+{% endblock %}
+
+
+{% block article_content %}
+
+{% if page.children.all %}
+<div class="large-3 columns page-menu">
+<header><h2>Subsections</h2></header>
+<ul>
+{% for child in page.children.all %}
+{% if child.status == 2 %}
+<li><header><h3><a href="{{child.get_absolute_url}}">{{child.title}}</a></h3></header></li>
+{% endif %}
+{% endfor %}
+</ul>
+</div>
+<div class="large-9 columns">
+
+{% else %}
+<div class="large-12 columns">
+{% endif %}	
+	
+	
+	<header><h1>{{page.title}}</h1>
+	<a href="/pdf{{request.get_full_path}}" class="right">Download as PDF</a>
+</header>
+	
+{% editable page.richtextpage.content %}
+{{ page.richtextpage.content|richtext_filters|parseSlideshow|safe }}
+{% endeditable %}
+</div>
+
+
+
+{% endblock %}

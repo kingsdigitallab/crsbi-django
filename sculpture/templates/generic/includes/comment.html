@@ -1,0 +1,26 @@
+{% load i18n mezzanine_tags comment_tags rating_tags %}
+
+{% for comment in comments_for_thread %}
+
+<div id="comment-{{ comment.id }}"
+    class="comment media{% if comment.by_author %} comment-author{% endif %}">
+
+    {% if not comment.is_removed and comment.is_public %}
+	<header><h3>{{ comment.user_name }} - <small>Posted {% blocktrans with sometime=comment.submit_date|timesince %}{{ sometime }} ago{% endblocktrans %}</small></h3> </header>
+
+	    <p>{{ comment.comment|safe }}</p>
+
+      {% else %}
+
+        {% if request.user.is_staff %}
+        <header style="background: #E4B3B3;"><h3>{{ comment.user_name }} - <small>Posted {% blocktrans with sometime=comment.submit_date|timesince %}{{ sometime }} ago{% endblocktrans %}</small></h3> </header>
+
+            <p style="background: #E4B3B3;">{{ comment.comment|safe }}</p>
+        {% endif %}
+{% endif %}
+</div>
+{% endfor %}
+
+{% if no_comments %}
+<p>{% trans "There are currently no comments" %}</p>
+{% endif %}

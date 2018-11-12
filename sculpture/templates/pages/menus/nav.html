@@ -1,0 +1,20 @@
+{% load i18n pages_tags %}
+
+<ul class="large-10 columns">
+	<li><a href="/" class="active">Home</a></li>
+	<li><a href="/search">Search</a></li>
+	<li><a href="/browse">Browse</a></li>
+	
+	{% page_menu "pages/menus/dropdown.html" %}
+	
+	<li><a href="/news">News</a></li>
+	
+	{% if request.user.is_authenticated %}
+	<li><a href="/mycrsbi">MyCRSBI</a>
+	<li><a href="/accounts/logout">Logout</a>
+	
+	{% else %}
+	<li><a href="/accounts/login">MyCRSBI</a>
+	
+	{%endif %}
+</ul>

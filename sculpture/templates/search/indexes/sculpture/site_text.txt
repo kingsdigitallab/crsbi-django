@@ -1,0 +1,25 @@
+{{ object.name }}
+{{ object.description|striptags|safe }}
+{{ object.history|striptags|safe }}
+{{ object.comments|striptags|safe }}
+{{ object.settlement.name }}
+{{ object.country.name }}
+{% for term in object.glossary_terms.all %}
+  {{ term }}
+  {% for synonym in term.synonyms.all %}
+    {{ synonym }}
+  {% endfor %}
+{% endfor %}
+{% for region in object.regions.all %}
+  {{ region.name }}
+{% endfor %}
+{% for dedication in object.dedications.all %}
+  {{ dedication.name }}
+{% endfor %}
+{% for diocese in object.dioceses.all %}
+  {{ diocese.name }}
+{% endfor %}
+{% for feature in object.features.all %}
+  {{ feature.name }}
+  {{ feature.description }}
+{% endfor %}

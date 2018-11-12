@@ -1,0 +1,94 @@
+{% extends 'sculpture/base.html' %}
+
+
+{% block title %}
+MyCRSBI{% endblock %}
+
+{% block breadcrumb %}
+
+<li><a href="/mycrsbi/">MyCRSBI</a>
+{% endblock %}
+
+
+{% block article_content %}
+<div class="large-12 columns">
+	<header><h1>MyCRSBI for {{request.user}}</h1></header>
+
+	{% include "sculpture/display/latest_images.html" %}
+
+	<header class="mycrsbi-header"><h3>The MyCRSBI page is for you.</h3></header>
+
+	<p>Create a MyCRSBI account and login to use all its features and to save your notes and comments.</p>
+
+	<p>Only you can see your personalised content: comments, tags, and saved searches.</p>
+
+	<div class="mycrsbi-promo">
+		
+		<header><h3>When you create a MyCRSBI account you can:</h3></header>
+
+		<ul>
+			<li>Add your own notes to the website, that only you can see, to help you use the website as a research tool</li>
+			<li>Add tags (short descriptions or keywords which you can use to link site reports)</li>
+			<li>Add comments (these can be long notes such as similarities to other sites or comments about something discovered)</li>
+		</ul>
+ 	<p>These tags and comments will then be saved in your MyCRSBI area of the website for you to refer back to anytime you login.  No one else has access to these notes. The MyCRSBI material is <strong>private</strong> to your login. </p>
+</div>
+		<div class="large-6 columns">
+			<header><h3>Commented Sites</h3></header>
+
+			{% if site_comments %}
+			<dl>
+			  {% for site_comment in site_comments %}
+			  {% with site_comment.site as site %}
+			  <dt><a href="{% url 'site_display' site.id %}">{{ site.get_title }}</a></dt>
+			  <dd>{{ site_comment }}</dd>
+			  {% endwith %}
+			  {% endfor %}
+			</dl>
+			{% else %}
+			<p>You haven't commented on any sites yet.</p>
+	
+
+			{% endif %}
+		</div>
+		
+		<div class="large-6 columns">
+			<header><h3>Tags Used</h3></header>
+
+			{% if tags %}
+			<dl>
+			  {% for tag in tags %}
+			  <dt><a href="tag/{{ tag.id }}/">{{ tag.tag }}</a></dt>
+			  <dd>{{ tag.description }}</dd>
+			  {% endfor %}
+			</dl>
+			{% else %}
+			<p>You don't appear to have tagged any sites yet.</p>
+			{% endif %}
+		</div>
+        {% if sites %}
+        <div class="large-12 columns">
+          <header><h3>Authored Sites</h3></header>
+
+          <ul class="no-bullet">
+          {% for site in sites %}
+            <li><a href="{{ site.url }}">{{ site.name }}</a> ({{ site.status }})
+				{% if site.editor_notes %}
+				<p><b>Editor Notes</b><br>
+					{{ site.editor_notes }}
+				</p>
+				{% endif %}
+				
+				{% if site.fieldworker_notes %}
+				<p><b>Fieldworker Notes</b><br>
+					{{ site.fieldworker_notes }}
+				</p>
+				{% endif %}
+				
+			</li>
+          {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+</div>
+{% endblock article_content %}

@@ -1,0 +1,8 @@
+
+An account at the Corpus of Romanesque Sculpture in Britain and
+Ireland site has been requested for you. In order to use that account,
+you must first activate it:
+
+  http://{{ site.domain }}{% url 'registration_activate' activation_key %}
+
+You have {{ expiration_days}} days to activate this account.

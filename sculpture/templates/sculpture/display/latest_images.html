@@ -1,0 +1,10 @@
+{% load pages_tags filters %}
+<div class="large-12 columns header-images">
+	{% for img in page|getLatestImages %}
+	<div class="large-2 columns">
+		<div class="restrictor">
+			<a href="{{img.site.get_absolute_url}}"title="{{img.site}}">{{img.thumbnail|safe}}</a>
+		</div>		
+	</div>
+	{% endfor %}
+</div>

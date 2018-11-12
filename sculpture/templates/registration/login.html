@@ -1,0 +1,87 @@
+{% extends "sculpture/base.html" %}
+
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{{request.get_full_path}}">Login</a>
+{% endblock %}
+
+{% block article_content %}
+<div class="large-12 columns">
+	<header><h1>MyCRSBI</h1></header>
+	
+	<header class="mycrsbi-header"><h3>The MyCRSBI page is for you.</h3></header>
+
+	<p>Create a MyCRSBI account and login to use all its features and to save your notes and comments.</p>
+
+	<p>Only you can see your personalised content: comments, tags, and saved searches.</p>
+
+	<div class="mycrsbi-promo">
+		
+		<header><h3>When you create a MyCRSBI account you can:</h3></header>
+
+		<ul>
+			<li>Add your own notes to the website, that only you can see, to help you use the website as a research tool</li>
+			<li>Add tags (short descriptions or keywords which you can use to link site reports)</li>
+			<li>Add comments (these can be long notes such as similarities to other sites or comments about something discovered)</li>
+		</ul>
+ 	<p>These tags and comments will then be saved in your MyCRSBI area of the website for you to refer back to anytime you login.  No one else has access to these notes. The MyCRSBI material is <strong>private</strong> to your login. </p>
+
+	</div>
+</div>
+
+<div class="large-6 columns">
+
+<header><h2>Login</h2></header>
+
+{% if form.errors %}
+  <p>Your username and password didn't match. Please try again. If you do not have an account, you can create one <a href="/accounts/register">here</a>. <a href="/accounts/password/reset/">Forgotten password</a>?</p>
+{% else %}
+<p>Already have an account? Great - you can login here!  <a href="/accounts/password/reset/">Forgotten password</a>?</p>
+{% endif %}
+
+<form method="post" action=".">
+  {% csrf_token %}
+  <table>
+    <tr>
+      <td>{{ form.username.label_tag }}</td>
+      <td>{{ form.username }}</td>
+    </tr>
+    <tr>
+      <td>{{ form.password.label_tag }}</td>
+      <td>{{ form.password }}</td>
+    </tr>
+  </table>
+
+  <input type="submit" value="Log in" />
+  <input type="hidden" name="next" value="{{ next }}" />
+</form>
+</div>
+
+<div class="large-6 columns">
+
+<header><h2>Register</h2></header>
+
+<p>Or, if you don't have an account, you can create one here.</p>
+	
+	<form method="post" action="/accounts/register/">
+	    {% csrf_token %}
+		
+	  <table>
+	    <tr><th><label for="id_username">Username:</label></th><td><input id="id_username" type="text" class="required" name="username" maxlength="30" /></td></tr>
+	<tr><th><label for="id_email">E-mail:</label></th><td><input id="id_email" type="text" class="required" name="email" maxlength="75" /></td></tr>
+	<tr><th><label for="id_password1">Password:</label></th><td><input id="id_password1" type="password" class="required" name="password1" /></td></tr>
+	<tr><th><label for="id_password2">Password (again):</label></th><td><input id="id_password2" type="password" class="required" name="password2" /></td></tr>
+
+	  </table>
+	  
+      <input type="submit" value="Register" />
+	  
+	</form>
+	
+	
+</div>
+{% endblock article_content %}

@@ -1,0 +1,317 @@
+{% extends "sculpture/display/base.html" %}
+
+{% block css %}
+{{ block.super }}
+{% if user.is_authenticated %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/tag_manager.css" />
+{% endif %}
+<link rel="stylesheet" href="{{STATIC_URL}}frontend-assets/css/leaflet.css" />
+<!--[if lte IE 8]>
+    <link rel="stylesheet" href="{{STATIC_URL}}leaflet.ie.css" />
+<![endif]-->
+<link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.qtip.min.css" />
+
+{% endblock css %}
+{% block js %}
+{{ block.super }}
+{% if user.is_authenticated %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/tag_manager.js"></script>
+{% endif %}
+<script src="{{STATIC_URL}}frontend-assets/js/leaflet.js"></script>
+<script src="{{STATIC_URL}}frontend-assets/js/typeahead.js"></script>
+
+{% endblock js %}
+
+{% block title %}
+{{site.get_title}}
+{% endblock %}
+
+{% block breadcrumb %}
+{% if previous_site or next_site %}
+<li><a href="{{ search_page }}">Search Results</a>
+{% endif %}
+<li><a href="{{site.get_absolute_url}}">{{site.get_title}}</a>
+
+{% endblock %}
+
+{% block article_content %}
+
+
+<!-- AddThis Button END -->
+<div class="large-12 columns">
+<header><h1>{{ site.get_title }}
+
+</h1></header>
+<p>
+{% if previous_site or next_site %}
+{% if previous_site %}<a href="{{ previous_site }}">Previous site</a> | {% endif %}<a href="{{ search_page }}">Return to search</a>{% if next_site %} | <a href="{{ next_site }}">Next site</a>{% endif %}
+
+
+{% endif %}
+<a href="/pdf{{request.get_full_path}}" class="right">Download as PDF</a>
+
+</p>
+
+	<div class="large-1 columns site-nav">
+	</div>
+
+	<div class="large-6 columns site-details">
+
+		{% if site.get_features.items %}
+		<section id="features">
+		<header><h2>Feature Sets ({{site.get_features.items|length}})</h2></header>
+		<ul>
+		{% for feature_set, value in site.get_features.items %}
+			{% if feature_set.id %}
+			<li><a href="#feature{{feature_set.id}}">{{feature_set.name}}</a></li>
+			{% endif %}
+		{% endfor %}
+
+		</ul>
+		</section>
+		{% endif %}
+
+
+		<section id="description">
+		<header><h2>Description</h2></header>
+
+		  {{ site.description|safe }}
+		</section>
+
+		{% if site.history %}
+		<section id="history">
+		<header><h2>History</h2></header>
+
+		  {{ site.history|safe }}
+	  </section>
+	  {% endif %}
+
+	  <!-- Features -->
+	  <section id="features">
+		  <header><h2>Features</h2></header>
+	  {% for feature_set, value in site.get_features.items %}
+	    {% with template_name="sculpture/display/site_feature_set.html" %}
+	      {% include template_name with site=site feature_set=feature_set value=value heading=2 only %}
+	    {% endwith %}
+	  {% endfor %}
+		  </section>
+
+		  <section id="comments">
+		    <header><h2>Comments/Opinions</h2></header>
+
+		    {{ site.comments|safe }}
+		  </section>
+
+		  <section id="biblio">
+		  <header><h2>Bibliography</h2></header>
+
+		    {% with items=site.bibliography_items.all %}
+		      {% if items %}
+		        <ul>
+		          {% for item in items %}
+		          <li>{{ item|safe }}</li>
+		          {% endfor %}
+		        </ul>
+		      {% endif %}
+		    {% endwith %}
+		  </section>
+
+
+
+		</section>
+
+
+
+
+	</div>
+
+
+
+	<div class="large-5 columns">
+
+
+
+        {% with site.images.all as images %}
+          {% if images %}
+            <section class="image_browser">
+              <div class="row browser_primary">
+                <div class="large-12 columns">
+                  {{ images.0.thumbnail_site|safe }}
+                </div>
+				  <div class="large-12 columns">
+                      <span class="image-caption">{{ images.0.caption|safe }}</span>
+				  </div>
+              </div>
+
+              {% if images.1 %}
+                <div class="row browser_keys">
+                  {% for image in images %}
+                    {% if not forloop.first %}
+                      <div class="large-4 columns">
+                        <div class="restrictor">{{ image.thumbnail_site|safe }}</div>
+                          <span class="image-caption">{{ image.caption|safe }}</span>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </section>
+          {% endif %}
+        {% endwith %}
+
+	  <section>
+		  <div class="row">
+  		  	<div class="large-12 columns">
+   			   <header><h3>Location</h3></header>
+
+		    {% if site.location %}
+
+		   		 <div id="map" style="height: 200px;"></div>
+				<button><a href="{%url 'site_map_display' site.id%}" target="_blank" >Full screen</a> </button>
+
+		    {% endif %}
+
+		 	</div>
+
+			  <div class="large-6 columns">
+
+				<dl class="site-info">
+					      <dt>Site Location</dt>
+					      <dd>{{ site.name }}</dd>
+					      <dt>National Grid Reference</dt>
+					      <dd>{{ site.grid_reference }}&nbsp;</dd>
+
+					      <dt>Boundaries</dt>
+					      <dd>{% for site_region in site.siteregion_set.all %}
+					        {% with region=site_region.region %}
+					        <i>{{ site_region.period }}</i>: <a href="{% url 'region_display' region.id %}">{{ region.name }}</a>{% if site_region.date %} ({{ site_region.date }}){% endif %}<br>
+					        {% endwith %}
+					      {% empty %}
+					        &nbsp;
+					      {% endfor %}</dd>
+					    </dl>
+
+			</div>
+
+			<div class="large-6 columns"><dl class="site-info">
+
+		  {% if site.sitediocese_set.all %}
+	      <dt>Diocese</dt>
+	      <dd>{% for site_diocese in site.sitediocese_set.all %}
+	        {% with diocese=site_diocese.diocese %}
+	        <i>{{ site_diocese.period }}</i>: <a href="{% url 'diocese_display' diocese.id %}">{{ diocese.name }}</a><br>
+	        {% endwith %}
+	      {% empty %}
+	        &nbsp;
+	      {% endfor %}</dd>
+		  {% endif%}
+	      <dt>Dedication</dt>
+	      <dd>{% for period, site_dedications in site.get_dedications.items %}
+	        <i>{{ period }}</i>:
+	        {% for site_dedication in site_dedications %}
+	          {% with dedication=site_dedication.dedication %}
+	          <a href="{% url 'dedication_display' dedication.id %}">{{ dedication.name }} {% if site_dedication.date %}({{ site_dedication.date }}){% endif %}</a>
+	          {% endwith %}
+	          {% if not forloop.last %} and {% endif %}
+	        {% endfor %}<br>
+	      {% empty %}
+	        &nbsp;
+	      {% endfor %}</dd>
+	      <dt>Type of building/monument</dt>
+	      <dd>{% with settlement=site.settlement %}
+	        {% if settlement %}<dd><a href="{% url 'settlement_display' settlement.id %}">{{ settlement }}</a>{% endif %}
+	      {% endwith %}&nbsp;</dd>
+	      <dt>Report authors</dt>
+	      <dd>{% for author in site.authors.all %}{{ author.name }}{% if not forloop.last %}, {% endif %}{% endfor %}&nbsp;</dd>
+		  {% if site.visit_date %}
+	      <dt>Visit Date</dt>
+	      <dd>{{ site.visit_date }}</dd>
+		  {% endif %}
+
+	    </dl>
+			</div>
+		</div>
+
+
+	  </section>
+
+	</div>
+</div>
+
+ {% if user.is_authenticated %}
+<div class="large-12 columns ">
+	 <div class="large-1 columns">&nbsp;</div>
+ 	 <div class="large-11 columns mycrsbi-site">
+ 	 	<header><h2>MyCRSBI</h2></header>
+	
+		<div class="large-6 columns">
+		    {% if site_comment %}
+		    <p>{{ site_comment }}</p>
+		    {% else %}
+		    <p>You have not commented on this site.</p>
+		    {% endif %}
+
+		    <form action="comment/" method="POST">
+		      {% csrf_token %}
+		      <table>
+		        {{ site_comment_form }}
+		        <tr>
+		          <td></td>
+		          <td><input name="_delete" type="submit" value="Delete" /> <input name="_save" type="submit" value="Save" /></td>
+		        </tr>
+		      </table>
+		    </form>
+		</div>
+
+		<div class="large-5 columns">
+
+		    <p>You have tagged this site report as:</p>
+
+		    <p><input type="text" name="tags" class="tagManager" placeholder="Type tag and hit enter."/></p>
+
+		    <p>Use tags to create sets of site reports that you can view on the
+		        <a href="{% url 'user_profile' %}">My CRSBI</a> page. These tags
+		        are viewable only by you.</p>
+
+		</div>
+	</div>
+</div>
+  {% endif %}
+
+
+
+
+{% endblock article_content %}
+
+{% block end_js %}
+{{ block.super }}
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-5112ca7e1af88f12"></script>
+{% if user.is_authenticated %}
+<script type="text/javascript">
+var prefilled = [{% for tag in tags %}{tag: "{{ tag.tag }}", id: {{tag.id}}},
+{% endfor %}];
+var typeaheadSource = [{% for tag in all_tags %}"{{ tag.tag }}",{% endfor %}];
+$(".tagManager").tagsManager({addURL: "{{ add_tag_url }}",
+      baseTagURL: "{{ base_tag_url }}", prefilled: prefilled,
+      removeURL: "{{ remove_tag_url }}", typeaheadSource: typeaheadSource});
+$(".tt-hint").remove();
+</script>
+{% endif %}
+{% if site.location %}
+<script type="text/javascript">
+var map = L.map('map').setView([{{ site.latitude }}, {{ site.longitude }}], 13);
+var scale = L.control.scale();
+scale.setPosition('topright');
+scale.addTo(map);
+L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
+		}).addTo(map);
+var marker_data = [{% for site_data in marker_data %}[{{ site_data.0 }}, '{{ site_data.1 }}', '{{ site_data.2 }}'],{% endfor %}];
+var len = marker_data.length;
+for (var i=0; i<len; i++) {
+  var marker = L.marker(marker_data[i][0], {title: marker_data[i][1]}).addTo(map);
+  marker.bindPopup('<p><a href="' + marker_data[i][2] + '">' + marker_data[i][1] + '</a></p>');
+}
+</script>
+{% endif %}
+{% endblock end_js %}

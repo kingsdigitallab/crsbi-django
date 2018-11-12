@@ -1,0 +1,16 @@
+
+<div class="row" style="clear: both;">
+	<div id="user_comment_form "class="large-12 columns">
+	  <header><h2>Send feedback on this page</h2></header>
+	  <form action="{% url 'user_feedback_submit' %}" method="post">
+	    {% csrf_token %}
+	    <table>
+	      {{ user_feedback_form }}
+	      <tr>
+	        <td></td>
+	        <td><input type="submit" value="Submit"></td>
+	      </tr>
+	    </table>
+	  </form>
+	</div>
+</div>

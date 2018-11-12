@@ -1,0 +1,295 @@
+{% extends "sculpture/base.html" %}
+{% load filters %}
+
+
+{% block title %}
+{% if query %}
+Search Results
+{% else %}
+Search
+{% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+{% if query %}
+<li><a href="/search/?q={{query}}">Results</a>
+{% else %}
+<li><a href="/search">Search</a>
+{% endif %}
+{% endblock %}
+
+
+{% block css %}
+{{ block.super }}
+<link rel="stylesheet" href="{{STATIC_URL}}frontend-assets/css/leaflet.css" />
+<link rel="stylesheet" href="{{STATIC_URL}}frontend-assets/css/leaflet.markercluster.css" />
+<!--[if lte IE 8]>
+    <link rel="stylesheet" href="{{STATIC_URL}}leaflet.ie.css" />
+<![endif]-->
+{% endblock css %}
+
+{% block js %}
+{{ block.super }}
+<script src="{{STATIC_URL}}frontend-assets/js/leaflet.js"></script>
+<script src="{{STATIC_URL}}frontend-assets/js/leaflet.label.js"></script>
+<script src="{{STATIC_URL}}frontend-assets/js/leaflet_counties_now.js"></script>
+
+<script src="{{STATIC_URL}}frontend-assets/js/leaflet_counties_traditional.js"></script>
+<script src="{{STATIC_URL}}frontend-assets/js/leaflet.markercluster.js"></script>
+
+
+<link rel="stylesheet" href="{{STATIC_URL}}frontend-assets/css/leaflet.label.css" />
+
+{% endblock js %}
+
+{% block article_content %}
+
+<div class="large-3 columns">
+	<form method="get" class="browse-search" action=".">
+		<header><h2>Search Terms</h2></header>
+
+      <input type="text" name="q" id="id_q" value="{{query}}" placeholder="Search...">
+	  <input type="submit" class="right" value="Search">
+	</form>
+		<!-- Begin faceting. -->
+
+    <div class="browse-facets">
+
+	    <header><h2>Filter By</h2></header>
+
+      {% include "search/facet_list.html" with facets=facets.fields.country facet_name="Country" facet_field="country_exact" %}
+      {% include "search/facet_list.html" with facets=facets.fields.regions_now facet_name="Boundaries (now)" facet_field="regions_now_exact" help_text="" %}
+      {% include "search/facet_list.html" with facets=facets.fields.regions_traditional facet_name="Boundaries (traditional)" facet_field="regions_traditional_exact" help_text="" %}
+      {% include "search/facet_list.html" with facets=facets.fields.dedications_medieval facet_name="Dedication (medieval)" facet_field="dedications_medieval_exact" help_text=""%}
+      {% include "search/facet_list.html" with facets=facets.fields.dedications_now facet_name="Dedication (now)" facet_field="dedications_now_exact" help_text="" %}
+      {% include "search/facet_list.html" with facets=facets.fields.dioceses_medieval facet_name="Diocese (medieval)" facet_field="dioceses_medieval_exact" help_text="" %}
+      {% include "search/facet_list.html" with facets=facets.fields.dioceses_now facet_name="Diocese (now)" facet_field="dioceses_now_exact" help_text="" %}
+      {% include "search/facet_list.html" with facets=facets.fields.settlement facet_name="Type of building/monument" facet_field="settlement_exact" %}
+      {% include "search/facet_list.html" with facets=facets.fields.feature_sets facet_name="Feature Set" facet_field="feature_sets_exact" %}
+      {% include "search/facet_list.html" with facets=facets.fields.glossary_terms facet_name="Glossary term" facet_field="glossary_terms_exact" %}
+    </div>
+    <!-- End faceting. -->
+</div>
+
+<div class="large-9 columns">
+	{% if query or request.GET.selected_facets %}
+
+	<div class="large-6 columns">
+		<header><h1>Search Results</h1></header>
+
+		{% if query %}<p>For the term <strong>{{query}}</strong>.{% endif %}{% if page.paginator.count %}Showing {{ page.paginator.count }} results.{% endif %}</p>
+
+
+		</div>
+
+		<div class="large-6 columns">
+			<div class="facet-switch">
+				<span class="inline-header">Switch To</span>
+
+				 <a title="Show all images, regardless of site." href="{{request.build_absolute_uri|stripPage|siteToImage}}"><i class="icon icon-picture"></i> Images</a>
+				 <a title="Show all sites." class="current" href="{{build_absolute_uri}}"><i class="icon icon-map-marker"></i> Sites</a>
+
+			 </div>
+
+	  		<div class="view-options">
+	  			<span class="inline-header">View</span>
+	 			{% if request|isIconView %}
+	  			 <a class="list" href="#"><i class="icon icon-list"></i> List</a>
+	  			 <a class="grid current" href="#"><i class="icon icon-th"></i> Icons</a>
+	 			 {% else %}
+	  			 <a class="list current" href="#"><i class="icon icon-list"></i> List</a>
+	  			 <a class="grid" href="#"><i class="icon icon-th"></i> Icons</a>
+	 			 {% endif %}
+	 		 </div>
+		 </div>
+	{% else %}
+
+	<div class="large-6 columns">
+
+		<header><h1>Search</h1></header>
+		 <p>Search every Romanesque site in Britain and Ireland</p>
+		</div>
+
+
+		<div class="large-6 columns">
+			<div class="facet-switch">
+				<span class="inline-header">Switch To</span>
+
+				 <a title="Show all images, regardless of site." href="{{request.build_absolute_uri|stripPage|siteToImage}}"><i class="icon icon-picture"></i> Images</a>
+				 <a title="Show all sites." class="current" href="{{build_absolute_uri}}"><i class="icon icon-map-marker"></i> Sites</a>
+
+			 </div>
+		 </div>
+
+	{% endif %}
+
+	 <div class="large-12 columns">
+
+	 <p>Our picture archive will document every example of Romanesque sculpture in Britain and Ireland.  At present our project is partially complete but our editors are adding material to the database every week, and our team is hard at work to complete the project.  </p>
+
+	 {% if page.paginator.count %}<p>Showing {{ page.paginator.count }} results.</p>{% endif %}
+
+
+	 </div>
+	<hr>
+
+	{% if selected_facets %}
+	<div class="large-12 columns">
+	<dl class="dl-horizontal">
+		<dt><span class="inline-title">Filtering By: </span>
+		<dd>{% for facet in selected_facets %}<span class="facet-selected">{{ facet.0 }} <a href="{{ facet.1 }}"><i class="icon icon-remove"></i></a></span>
+	    {% endfor %}</dd>
+
+
+	  </dl>
+  </div>
+	{% endif %}
+
+
+
+
+	<div class="large-12 columns">
+
+
+
+		{% if page.object_list %}
+
+	    <div id="map" class='browse-map results-map' style="height: 400px;"></div>
+
+
+		  {% for result in page.object_list %}
+		    {% with result.object as site %}
+
+			<div class="result-icon">
+				<div class="restrictor-search">
+  		   		 {% with site.get_images as images %}
+  		     	 {% if images %}
+			  		<a href="{{ site.get_absolute_url }}">
+  		      		  {{ images.0.thumbnail|safe }}
+		 		 	</a>
+
+			  	{% else %}
+
+		  		<a href="{{ site.get_absolute_url }}">
+				  <img src="{{STATIC_URL}}frontend-assets/img/placeholder.png">
+	 		 	</a>
+
+	  		      {% endif %}
+	  		      {% endwith %}
+				 </div>
+				 <div class="meta">
+		  		      <header><h3><a href="{{ site.get_absolute_url }}">{{ site.get_title }}</a></h3></header>
+				  	{% if site.settlement%}<strong>{{site.settlement}}</strong>{% endif %}
+				    <p>{{ site.description|striptags|truncatewords:25|safe }}</p><a href="{{ site.get_absolute_url }}" class="more-link">Read More...</a>
+				</div>
+			</div>
+
+			<div class="result-list">
+			
+
+			 <div class="meta large-12 columns">
+			<header>
+        <h2><a href="{{ site.get_absolute_url }}">{{site.name}}</a></h2>
+        <h3><a href="{{ site.get_absolute_url }}">{{ site.get_title }}</a></h3></header>
+			{% if site.settlement%}<strong>{{site.settlement}}</strong>{% endif %}
+			<p>{{ site.description|striptags|truncatewords:25|safe }}</p>
+		</div>
+
+			</div>
+
+		    {% endwith %}
+
+		  {% endfor %}{% for feature_set, value in site.get_features.items %}
+				{% for feature in value %}
+				{% for new_feature_set, new_value in value.items %}
+						{% for feature_f in new_value %}
+							{% for image in feature_f.images.all %}
+								{{ image}}
+							{% endfor %}
+						{% endfor %}
+					{% endfor %}
+				{% endfor %}
+			{% endfor %}
+	</div>
+
+
+
+
+
+
+
+
+		  {% if page.has_previous or page.has_next %}
+		    <div class="pagination">
+		      {% if page.has_previous %}<a href="{{request.build_absolute_uri|stripPage}}&amp;page={{ page.previous_page_number }}">&laquo; Previous</a> {% else %}
+
+			  <a href="{{request.build_absolute_uri}}" class="disabled">&laquo; Previous</a>
+			  {% endif %}
+
+			  <span class="count">Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+		      {% if page.has_next %}<a href="{{request.build_absolute_uri|stripPage}}&amp;page={{ page.next_page_number }}">Next &raquo;</a>
+			  {% else %}
+
+			  <a href="{{request.build_absolute_uri}}" class="disabled">Next &raquo;</a>{% endif %}
+		    </div>
+		  	{% endif %}
+		{% else %}
+			{% if query %}
+				<p>No results found.</p>
+			{% else %}
+
+			<div class="boundary_switcher"><a href="#" data-type="now">Current Boundaries</a><a href="#" title="*Traditional: pre-1973 Ulster, pre-1974 England and Wales, pre-1975 Scotland &amp; pre-1994 Republic of Ireland" data-type="traditional" class="current">Traditional Boundaries*</a></div>
+		    <div id="map" class='browse-map' style="height: 400px;"></div>
+
+			{% endif %}
+		{% endif %}
+	</div>
+
+</div>
+
+{% endblock %}
+
+{% block end_js %}
+{{ block.super }}
+<script>
+var marker_data = [{% for site_data in marker_data %}[{{ site_data.0 }}, '{{ site_data.1 }}', '{{ site_data.2 }}'],{% endfor %}];
+var len = marker_data.length;
+
+var map;
+if(len > 0)
+{
+	map = L.map('map').setView([55, -0.19], 1);
+} else
+{
+	map = L.map('map').setView([54.8, -4.19], 5);
+}
+map.scrollWheelZoom.disable();
+
+var scale = L.control.scale();
+scale.setPosition('topright');
+scale.addTo(map);
+
+var markers = L.markerClusterGroup();
+
+//L.tileLayer('http://{s}.tile.cloudmade.com/4fed3cdaed894487a2b8e12aaf939d0c/997/256/{z}/{x}/{y}.png', {
+
+L.tileLayer('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
+		}).addTo(map);
+
+for (var i=0; i<len; i++) {
+  var marker = L.marker(marker_data[i][0], {title: marker_data[i][1]});
+  marker.bindPopup('<p><a href="' + marker_data[i][2] + '">' + marker_data[i][1] + '</a></p>');
+  markers.addLayer(marker);
+}
+
+map.addLayer(markers);
+//fit the map to the markers
+
+//(markers.getBounds());
+map.fitBounds(markers.getBounds());
+
+
+
+</script>
+{% endblock end_js %}

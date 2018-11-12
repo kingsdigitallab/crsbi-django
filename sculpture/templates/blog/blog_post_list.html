@@ -1,0 +1,86 @@
+{% extends "sculpture/base.html" %}
+
+{% load i18n mezzanine_tags blog_tags keyword_tags disqus_tags pages_tags  filters %}
+
+
+{% block title %}
+News
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="/news">News</a>
+
+{% endblock %}
+
+
+{% block article_content %}
+<div class="large-12 columns">
+	<header>
+	    <h1>News</h1>
+	</header>
+</div>
+
+{% include "sculpture/display/latest_images.html" %}
+
+{% if blog_posts.object_list %}
+    {% for blog_post in blog_posts.object_list %}
+	
+<div class="large-12 columns">
+
+        <header class="news-story">
+            <h3>
+                <a href="{{ blog_post.get_absolute_url }}">{{ blog_post.title }}</a> 
+        </h3>
+    </header> 
+                <p class="news-meta">Posted by 
+            		{% with blog_post.user as author %}
+            	    {{ author.get_full_name|default:author.username }}
+            	    {% endwith %}
+            		{% if blog_post.category_list %} in
+            		   	{% for category in blog_post.category_list %}{% if not forloop.first %}{% if not forloop.last %}, {% else %} &amp; {% endif %}{% endif %}<a href="{% url "blog_post_list_category" category.slug %}">{{ category }}</a>{% endfor %}
+	
+            		{% endif %}  
+            		{% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }} ago{% endblocktrans %}.</a>
+        
+            	    {% if settings.COMMENTS_DISQUS_SHORTNAME %}
+            	    <a href="{{ blog_post.get_absolute_url }}#disqus_thread"
+            	        data-disqus-identifier="{% disqus_id_for blog_post %}">
+            	        {% trans "Comments" %}.
+            	    </a>
+            	    {% else %}
+            	    <a href="{{ blog_post.get_absolute_url }}#comments">
+            	        {% blocktrans count blog_post.comments_count as comments_count %}1 Comment{% plural %}{{ comments_count }} Comments{% endblocktrans %}.
+            	    </a>
+	        	    {% endif %}
+				</p>
+
+        {{ blog_post.description_from_content|safe }}     
+	
+    	<p class="blog-list-detail">
+    	    {% if blog_post.keyword_list %}
+    	    {% trans "Tags" %}:
+    	    {% spaceless %}
+    	    {% for tag in blog_post.keyword_list %}
+    	    <a href="{% url "blog_post_list_tag" tag.slug %}" class="tag">{{ tag }}</a>
+    	    {% endfor %}
+    	    {% endspaceless %}
+    	    <br>
+    	    {% endif %}
+    	    <span class="link-more"><a href="{{ blog_post.get_absolute_url }}">{% trans "Read More" %}</a></span>
+	   
+    	</p> 
+		
+	</div>
+		 
+	
+        {% endfor %}
+        
+{% else %}
+<header><h2>Sorry!</h2></header>
+<p>It doesn't look like there's any news stories to display.
+{% endif %}
+
+
+
+{% pagination_for blog_posts %}
+{% endblock %}

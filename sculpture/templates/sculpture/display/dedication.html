@@ -1,0 +1,20 @@
+{% extends "sculpture/display/base.html" %}
+
+
+{%block title%}Dedication: {{dedication}}{%endblock%}
+
+{%block breadcrumb%}
+<li><a href="{{dedication.get_absolute_url}}">Dedication: {{dedication}}</a>
+{% endblock %}
+
+{% block article_content %}
+
+<div class="large-12 columns">
+<header><h1>{{ dedication }}</h1></header>
+
+<p>Sites with this Dedication: <a href="{% url 'haystack_site_search' %}?selected_facets=dedications_medieval_exact:{{ dedication }}">Medieval)</a> and <a href="{% url 'haystack_site_search' %}?selected_facets=dedications_now_exact:{{ dedication }}">Now.</a>
+	
+<p>Images with this dedication: <a href="{% url 'haystack_image_search' %}?selected_facets=dedications_medieval_exact:{{ dedication }}">Medieval</a> and <a href="{% url 'haystack_image_search' %}?selected_facets=dedications_now_exact:{{ dedication }}">Now</a>.</p>
+
+</div>
+{% endblock article_content %}

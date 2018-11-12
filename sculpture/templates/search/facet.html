@@ -1,0 +1,11 @@
+{% if facet.1 or facet.4 %}
+<li><a for="{{facet.0}}" href="{{ base_url }}&amp;selected_facets={{ facet_field }}:{{ facet.0|urlencode }}">{{ facet.2 }}</a> <span class="facet-count">{{ facet.1 }}</span> {% if facet.3 %} <a href="{{ facet.3 }}" target="_new" title="View in new window"><i class="icon icon-long-arrow-right"></i></a>{% endif %}{% if facet.4 %}
+<ul>
+  {% for subfacet in facet.4 %}
+  {% with template_name="search/facet.html" %}
+    {% include template_name with facet=subfacet facet_field=facet_field %}
+  {% endwith %}
+  {% endfor %}
+</ul>
+{% endif %}</li>
+{% endif %}

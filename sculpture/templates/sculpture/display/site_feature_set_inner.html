@@ -1,0 +1,52 @@
+
+{% load filters %}
+{% if value %}
+{% if not value|islist %}
+  <section id="feature_{{feature_set.id}}">
+    <header><h3>{{ feature_set.name }}</h3></header>
+    {% for new_feature_set, new_value in value.items %}
+      {% with template_name="sculpture/display/site_feature_set_inner.html" %}
+        {% include template_name with site=site feature_set=new_feature_set value=new_value heading=heading|add:1 only %}
+      {% endwith %}
+	  
+    {% endfor %}
+	
+  </section>
+{% else %}
+  {% for feature in value %}
+    <section>
+      <header><h3>{{ feature.name }}</h3></header>
+
+      {% for image in feature.images.all %}
+        <a href="{% url 'image_display' site.id 'feature' image.id %}">{{ image.thumbnail|safe }}</a>
+      {% endfor %}
+
+      {{ feature.description|safe }}
+
+      {% with structured_dimensions=feature.structured_dimensions %}
+      {% if structured_dimensions %}
+      <h{{ heading|add:1 }}>Dimensions</h{{ heading|add:1 }}>
+
+      {% for section, dimensions in structured_dimensions.items %}
+      <table>
+        <caption>{{ section }}</caption>
+        {% for dimension in dimensions %}
+        <tr>
+          <td>{{ dimension.dimension_type }}</td>
+          <td>{{ dimension.value }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      {% for detail in feature.details.all %}
+      <h{{ heading|add:1 }}>{{ detail.title }}</h{{ heading|add:1 }}>
+
+      {{ detail.text|safe }}
+      {% endfor %}
+    </section>
+  {% endfor %}
+{% endif %}
+{% endif %}

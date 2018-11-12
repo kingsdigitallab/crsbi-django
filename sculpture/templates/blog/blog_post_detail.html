@@ -1,0 +1,58 @@
+{% extends "sculpture/base.html" %}
+
+{% load i18n filters mezzanine_tags blog_tags keyword_tags disqus_tags %}
+{% load comment_tags %}
+
+
+{% block title %}
+{{blog_post.title}}
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="/news">News</a>
+<li><a href="{ blog_post.get_absolute_url }}">{{blog_post.title}}</a>
+
+{% endblock %}
+
+
+{% block article_content %}
+<div class="large-12 columns">
+	<header>
+	    <h1>{{ blog_post.title }}</h1>
+	</header>
+</div>
+<div class="large-12 columns">
+      <p  class="news-meta">Posted by 
+		{% with blog_post.user as author %}
+	    {{ author.get_full_name|default:author.username }}
+	    {% endwith %}
+		{% if blog_post.category_list %} in
+		   	{% for category in blog_post.category_list %}{% if not forloop.first %}{% if not forloop.last %}, {% else %} &amp; {% endif %}{% endif %}<a href="{% url "blog_post_list_category" category.slug %}">{{ category }}</a>{% endfor %}
+
+		{% endif %}  
+		{% blocktrans with sometime=blog_post.publish_date|timesince %}{{ sometime }} ago{% endblocktrans %}.</a>
+
+	    {% if settings.COMMENTS_DISQUS_SHORTNAME %}
+	    <a href="#disqus_thread"
+	        data-disqus-identifier="{% disqus_id_for blog_post %}">
+	        {% trans "Comments" %}.
+	    </a>
+	    {% else %}
+	    <a href="{{ blog_post.get_absolute_url }}#comments">
+	        {% blocktrans count blog_post.comments_count as comments_count %}1 Comment{% plural %}{{ comments_count }} Comments{% endblocktrans %}.
+	    </a>
+	    {% endif %}
+	</p>
+
+		<p>{{ blog_post.content|richtext_filters|parseSlideshow|safe }}</p>
+	
+	
+        
+
+
+</div>
+
+{% comments_for blog_post %}
+
+
+{% endblock %}

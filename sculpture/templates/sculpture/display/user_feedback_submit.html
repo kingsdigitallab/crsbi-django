@@ -1,0 +1,23 @@
+{% extends "sculpture/base.html" %}
+
+{% block article_content %}
+{% if success %}
+<div class="page-header">
+  <h1>Feedback submitted</h1>
+</div>
+
+<p>Thank you for providing feedback on the site. You may wish to return to <a
+href="{{ page }}">the page you commented on</a>.</p>
+
+{% else %}
+<div class="page-header">
+  <h1>Error submitting feedback</h1>
+</div>
+
+There was a problem with your submission. Please try again.
+
+{% include "sculpture/display/user_feedback.html" %}
+{% endif %}
+{% endblock article_content %}
+
+{% block user_feedback %}{% endblock user_feedback %}

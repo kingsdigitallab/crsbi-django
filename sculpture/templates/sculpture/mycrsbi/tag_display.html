@@ -1,0 +1,36 @@
+{% extends 'sculpture/base.html' %}
+
+{% block article_content %}
+<div class="large-8 columns">
+
+<header><h1>Site Tag: <em>{{ site_tag.tag }}</em></h1></header>
+
+{% if site_tag.description %}
+<p>{{ site_tag.description }}</p>
+{% endif %}
+
+<header><h2>Sites tagged with {{ site_tag.tag }}</h2></header>
+
+<ul>
+  {% for site in site_tag.sites.all %}
+  <li><a href="{% url 'site_display' site.id %}">{{ site.get_title }}</a></li>
+  {% endfor %}
+</ul>
+</div>
+<div class="large-4 columns">
+
+
+<header><h2>Edit Tag</h2></header>
+
+<form action="." method="POST">
+  {% csrf_token %}
+  <table>
+    {{ form }}
+    <tr>
+      <td></td>
+      <td><input type="submit" value="Save" /></td>
+    </tr>
+  </table>
+</form>
+</div>
+{% endblock article_content %}

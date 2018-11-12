@@ -1,0 +1,216 @@
+{% load mezzanine_tags filters %}
+
+{% load i18n  mezzanine_tags blog_tags keyword_tags disqus_tags pages_tags %}
+
+
+<!DOCTYPE html>
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+
+<head>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>{% block title %}Home{%endblock%} &middot; The Corpus of Romanesque Sculpture in Britain &amp; Ireland</title>
+
+  <link rel="stylesheet" href="{{STATIC_URL}}frontend-assets/css/normalize.css">
+  <link rel="stylesheet" href="{{STATIC_URL}}frontend-assets/css/foundation.css">
+  
+  <link rel="stylesheet" href="{{STATIC_URL}}frontend-assets/css/crsbi.css">
+  <link rel="stylesheet" href="{{STATIC_URL}}frontend-assets/css/smallscreen.css">
+  
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  
+  
+  <script src="{{STATIC_URL}}frontend-assets/js/vendor/jquery.js"></script>
+  <script src="{{STATIC_URL}}frontend-assets/js/vendor/jquery-ui.js"></script>
+  
+  <script src="{{STATIC_URL}}frontend-assets/js/vendor/custom.modernizr.js"></script> 
+  <script src="{{STATIC_URL}}frontend-assets/js/ui.js"></script>
+  <script defer="defer" src="https://kdl.kcl.ac.uk/sla-acpp/js/sla.js" type="text/javascript"></script>
+
+</head>
+<body>
+	<div class="image-popup">
+	<img>
+	</div>
+	{% if user.is_staff %}
+	<a href="/admin" class="admin_link">Admin Panel</a>
+	
+	{% endif %}
+	
+	<div class="site-header home">
+		<nav>
+				{% include "pages/menus/nav.html" %}
+		</nav>
+	
+		<div class="large-1 columns">&nbsp;</div>
+		<div class="site-title">
+			<a href="/"><img src="{{STATIC_URL}}frontend-assets/img/header/logo.png" alt="CRSBI"></a>
+			<span class="text">
+				<em>The Corpus of</em>
+				<strong>ROMANESQUE SCULPTURE</strong>
+				<em>in Britain &amp; Ireland</em>
+			</span>
+		</div>
+		
+		<span class="switcher"><i class="icon icon-sign-blank"></i> <i class="icon icon-check-empty"></i> <i class="icon icon-check-empty"></i> </span>
+	</div>
+	
+	<div class="content-wrapper home large-10 columns">
+		
+		<ul class="breadcrumb">
+			<li><a href="/">Home</a>
+				{% block breadcrumb %}
+				
+				{% endblock %}
+				
+		</ul>
+		
+			<div class="large-12 columns">
+				<div class="large-8 columns">
+				
+					<header><h2>Welcome to CRSBI</h2></header>
+	
+					{% editable page.richtextpage.content %}
+					{{ page.richtextpage.content|safe|parseSlideshow|safe }}
+					{% endeditable %}
+			
+					<a href="/about">Read More</a>
+				
+				
+					<header class="home"><h3>Recent Images</h3></header>
+					{% for img in page|getLatestImages %}
+					<div class="restrictor-home">
+					<a href="{{img.site.get_absolute_url}}" title="{{img.site}}">{{img.thumbnail|safe}}</a></div>		
+					{% endfor %}
+							
+				</div>
+				<div class="large-4 columns news-holder">
+					
+								
+					{% for post in request|getStickyBlogPosts %}
+	
+					<div class="result">
+						
+			  		    <header><h3><a href="{{ post.get_absolute_url }}">{{post.title}}</a></h3></header>
+						
+					    <p>{{post.description|richtext_filters|safe}}</p>
+						
+						
+						
+					
+					</div>
+					{% endfor %}
+					
+				</div>
+			
+			</div>
+			
+			
+			<div class="large-12 columns">
+				<div class="large-12 columns">
+				
+						<header><h1>News</h1></header>
+						
+				</div>
+							
+			{% for post in request|getNotStickyBlogPosts %}
+
+				<div class="result large-4 columns">
+					
+		  		    <header><h3><a href="{{ post.get_absolute_url }}">{{post.title}}</a></h3></header>
+  				  	<p class="news-meta">Posted {% blocktrans with sometime=post.publish_date|timesince %}{{ sometime }} ago.{% endblocktrans %}</p>
+					
+				    <p>{{post.description|richtext_filters|safe}}</p>
+					
+					
+					
+				
+				</div>
+				{% endfor %}
+										
+			
+			</div>
+
+
+
+		</div>
+					
+									
+	</div>
+	
+	<div class="site-footer large-12 columns">
+		<!-- Spacing -->
+		<div class="large-1 columns">&nbsp;
+		</div>
+		<div class="large-2 columns">
+			&nbsp;
+			<img src="{{STATIC_URL}}frontend-assets/img/footer/CRSBI-logo.png" class="site-footer-logo" alt="KCL DDH">
+		</div>
+		
+		
+		<div class="large-8 columns footer-links">
+			<ul>{% page_menu "pages/menus/footer.html" %}</ul>
+        	
+			<div class="footer-copyright">
+			<p>Maintained by <a href="//www.kdl.kcl.ac.uk/" title="King's Digital Lab"><strong>King's Digital Lab</strong></a></p>
+
+			<p>&copy; {% now "Y" %} The Corpus of Romanesque Sculpture in Britain and Ireland</div></p>
+		</div>
+		
+		<!-- Spacing -->
+		<div class="large-1 columns">
+			&nbsp;
+		</div>
+			
+	</div>
+	
+  <script src="{{STATIC_URL}}frontend-assets/js/foundation.min.js"></script>
+  <!--
+  
+  <script src="js/foundation/foundation.js"></script>
+  
+  <script src="js/foundation/foundation.alerts.js"></script>
+  
+  <script src="js/foundation/foundation.clearing.js"></script>
+  
+  <script src="js/foundation/foundation.cookie.js"></script>
+  
+  <script src="js/foundation/foundation.dropdown.js"></script>
+  
+  <script src="js/foundation/foundation.forms.js"></script>
+  
+  <script src="js/foundation/foundation.joyride.js"></script>
+  
+  <script src="js/foundation/foundation.magellan.js"></script>
+  
+  <script src="js/foundation/foundation.orbit.js"></script>
+  
+  <script src="js/foundation/foundation.reveal.js"></script>
+  
+  <script src="js/foundation/foundation.section.js"></script>
+  
+  <script src="js/foundation/foundation.tooltips.js"></script>
+  
+  <script src="js/foundation/foundation.topbar.js"></script>
+  
+  <script src="js/foundation/foundation.interchange.js"></script>
+  
+  <script src="js/foundation/foundation.placeholder.js"></script>
+  
+  <script src="js/foundation/foundation.abide.js"></script>
+  
+  -->
+  
+ <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-87398673-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+ 
+  gtag('config', 'UA-87398673-1');
+</script>
+</body>
+</html>

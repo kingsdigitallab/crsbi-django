@@ -1,0 +1,17 @@
+{% extends "sculpture/display/base.html" %}
+
+
+{% block title %}
+Settlement: {{settlement}}
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{{settlement.get_absolute_url}}">Settlement</a>
+{% endblock %}
+{% block article_content %}
+<div class="large-12 columns">
+<header><h1>Settlement: {{settlement}}</h1></header>
+
+<p>View <a href="{% url 'haystack_site_search' %}?selected_facets=settlement:{{ settlement }}">Sites of this type.</a></p>
+</div>
+{% endblock article_content %}

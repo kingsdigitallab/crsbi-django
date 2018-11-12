@@ -1,0 +1,31 @@
+{% extends "admin/base_site.html" %}
+{% load admin_static admin_modify i18n %}
+
+{% block extrahead %}{{ block.super }}
+{{ media }}
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" hr
+ef="{% static "admin/css/forms.css" %}" />{% endblock %}
+
+{% block content %}
+<h1>Assign Feature images to new Feature</h1>
+
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+
+<form action="" method="post">
+{% csrf_token %}
+<div>
+<table>
+  {{ form }}
+  <tr>
+    <td></td>
+    <td><input type="submit" value="Change"></td>
+  </tr>
+</table>
+</form>
+
+</div>
+{% endblock content %}

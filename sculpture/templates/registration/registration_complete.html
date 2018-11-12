@@ -1,0 +1,23 @@
+{% extends "sculpture/base.html" %}
+{% block title %}
+Registration Complete
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="/accounts/register">Register</a>
+<li><a href="{{request.get_full_path}}">Registration Complete</a>
+
+{% endblock %}
+{% block article_content %}
+<div class="large-12 columns">
+
+<header><h1>Registration Complete</h1></header>
+
+<p>Your new account has been registered. An email has been sent to
+your email address with instructions on how to activate it. You must
+activate the account before you can log in.</p>
+
+<p>If you have trouble receiving this email, please <a href="/about/contact/">contact us</a>.</p>
+
+</div>
+{% endblock article_content %}

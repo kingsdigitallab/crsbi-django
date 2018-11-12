@@ -1,0 +1,48 @@
+{% extends "sculpture/display/base.html" %}
+
+
+{% block breadcrumb %}
+<li><a href="/glossary">Glossary</a>
+<li><a href="/glossary/term/{{term.id}}">{{term}}</a>
+{% endblock %}
+
+{% block article_content %}
+<div class="large-12 columns">
+<header><h1>{{ term }}</h1></header>
+
+
+
+{% with synonyms=term.display_synonyms parent=term.broader_term children=term.narrower_terms.all %}
+  {% if synonyms or parent or children %}
+  <dl class="dl-horizontal">
+    {% if parent %}
+      <dt>Broader term</dt>
+      <dd><a href="{% url 'glossary_term_display' parent.id %}">{{ parent }}</a></dd>
+    {% endif %}
+    {% if synonyms %}
+      <dt>Synonyms</dt>
+      {% for synonym in synonyms %}
+        <dd>{{ synonym }}</dd>
+      {% endfor %}
+    {% endif %}
+    {% if children %}
+      <dt>Narrower terms</dt>
+      {% for child in children %}
+        <dd><a href="{% url 'glossary_term_display' child.id %}">{{ child }}</a></dd>
+      {% endfor %}
+    {% endif %}
+  </dl>
+  {% endif %}
+{% endwith %}
+
+<section>
+	
+  {{ term.description|safe }}
+
+
+</section>
+
+<p>View <a href="{% url 'haystack_site_search' %}?selected_facets=glossary_terms_exact:{{ term }}">Site reports using this term.</a></p>
+
+</div>
+{% endblock article_content %}

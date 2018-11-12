@@ -1,0 +1,58 @@
+{% extends "sculpture/display/image.html" %}
+
+
+{% block article_content %}
+{{ block.super }}
+<div class="large-12 columns">
+  <p>Image of the feature "{{ image.feature }}" at <a href="{% url 'site_display' site.id %}">{{ site.name }}</a>.</p>
+  
+    <p><img src="{{ image.image.url }}"></p>
+    {% if image.photographer %}
+    <p>by {{ image.photographer }}.</p>
+	{% else %}
+	<p>photographer not known.</p>
+    {% endif %}
+
+    {% if image.copyright %}
+
+    <p><strong>Copyright:</strong> {{image.copyright}}</p>
+    {% endif %}
+
+
+  {% if image.description %}
+  <p>{{ image.description }}</p>
+  {% endif %}
+  
+
+  {{ image.feature.description|safe }}
+
+  {% with structured_dimensions=image.feature.structured_dimensions %}
+  {% if structured_dimensions %}
+  <header><h2>Dimensions</h2></header>
+
+  {% for section, dimensions in structured_dimensions.items %}
+  <table>
+    <caption>{{ section }}</caption>
+    {% for dimension in dimensions %}
+    <tr>
+		{% if dimension.dimension_type %}
+     	 <td>{{ dimension.dimension_type }}</td>
+     	 <td>{{ dimension.value }}</td>
+		 {% else %}
+     	 <td>Dimension</td>
+     	 <td>unavailable.</td>
+		 {% endif %}
+    </tr>
+    {% endfor %}
+  </table>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+  {% for detail in feature.details.all %}
+  <h{{ heading|add:1 }}>{{ detail.title }}</h{{ heading|add:1 }}>
+
+  {{ detail.text|safe }}
+  {% endfor %}
+</div>
+  {% endblock article_content %}

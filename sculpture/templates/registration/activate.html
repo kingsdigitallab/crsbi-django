@@ -1,0 +1,17 @@
+{% extends "sculpture/base.html" %}
+{% block title %}
+Account Activation{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{{request.get_full_path}}">Account Activation</a>
+
+{% endblock %}
+
+
+{% block article_content %}
+<div class="large-12 columns">
+<header><h1>Account activation failed</h1></header>
+
+<p>Your account was not activated. {{ activation_key }}</p>
+</div>
+{% endblock article_content %}

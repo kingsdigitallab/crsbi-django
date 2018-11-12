@@ -1,0 +1,36 @@
+{% extends "sculpture/display/base.html" %}
+
+
+{% block breadcrumb %}
+<li><a href="{{feature_set.get_absolute_url}}">{{feature_set.get_title}}</a>
+{% endblock %}
+
+{% block title %}
+Feature Set: {{ feature_set.get_title }}
+{% endblock %}
+
+{% block article_content %}
+<div class="large-12 columns">
+<header>  <h1>{{ feature_set.get_title }}</h1></header>
+
+{% with parent=feature_set.feature_set children=feature_set.children.all %}
+<dl class="dl-horizontal">
+  {% if parent %}
+    <dt>Broader feature type</dt>
+    <dd><a href="{% url 'feature_set_display' parent.id %}">{{ parent.get_title }}</a></dd>
+  {% endif %}
+  {% if children %}
+    <dt>Narrow feature types</dt>
+    {% for child in children %}
+      <dd><a href="{% url 'feature_set_display' child.id %}">{{ child.name }}</a></dd>
+    {% endfor %}
+  {% endif %}
+  <dd>
+</dl>
+{% endwith %}
+
+<p>View <a href="{% url 'haystack_site_search' %}?selected_facets=feature_sets_exact:{{ feature_set.name }}">Sites</a> and <a href="{% url 'haystack_image_search' %}?selected_facets=feature_sets_exact:{{ feature_set.name }}">Images</a> having features of this type.</p>
+
+</div>
+
+{% endblock article_content %}

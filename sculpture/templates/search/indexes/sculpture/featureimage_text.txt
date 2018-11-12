@@ -1,0 +1,4 @@
+{{ object.caption }}
+{{ object.description }}
+{{ object.feature.name }}
+{{ object.feature.description }}

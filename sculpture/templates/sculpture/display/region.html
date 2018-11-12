@@ -1,0 +1,21 @@
+{% extends "sculpture/display/base.html" %}
+
+
+{% block title %}
+Region: {{region}}
+{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{{region.get_absolute_url}}">Region: {{region}}</a>
+{% endblock %}
+
+{% block article_content %}
+<div class="large-12 columns">
+<header><h1>Region: {{region}}</h1></header>
+
+<p>Sites in this region: <a href="{% url 'haystack_site_search' %}?selected_facets=regions_traditional_exact:{{ region.name }}">pre-1974 (traditional)</a> and <a href="{% url 'haystack_site_search' %}?selected_facets=regions_now_exact:{{ region.name }}">now</a>.</p>
+
+<p>Images in this region: <a href="{% url 'haystack_image_search' %}?selected_facets=regions_traditional_exact:{{ region.name }}">pre-1974 (traditional)</a> and <a href="{% url 'haystack_image_search' %}?selected_facets=regions_now_exact:{{ region.name }}">now</a>.</p>
+
+</div>
+{% endblock article_content %}
